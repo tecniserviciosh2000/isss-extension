@@ -205,6 +205,7 @@ async function runAutoSync() {
                 date: new Date().toISOString(),
                 status: webhookRes.status,
                 recordsSent: allExtractedRecords.length,
+                payload_enviado: payload,
                 response: webhookRes.responseText || "Sin respuesta del servidor"
             };
             
@@ -216,9 +217,9 @@ async function runAutoSync() {
             });
 
             if (webhookRes.ok) {
-                console.log(`✅ ISSS Auto-Sync: Sincronización exitosa. ${allExtractedRecords.length} registros enviados.`);
+                console.log(`✅ ISSS Auto-Sync: Sincronización exitosa. ${allExtractedRecords.length} registros enviados.`, payload);
             } else {
-                console.error(`❌ ISSS Auto-Sync: Error enviando al Webhook HTTP ${webhookRes.status}`);
+                console.error(`❌ ISSS Auto-Sync: Error enviando al Webhook HTTP ${webhookRes.status}`, payload, webhookRes.responseText);
             }
         });
     } catch(e) {
