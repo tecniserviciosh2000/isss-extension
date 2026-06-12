@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "ISSS - Dashboard Incapacidades",
+  "version": "1.0.0",
+  "description": "Extrae, contabiliza y exporta las incapacidades del personal desde el portal de patronos del ISSS.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "sidePanel",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://portal.isss.gob.sv/*",
+    "*://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://portal.isss.gob.sv/patrono/*"],
+      "js": ["scripts/config.js", "scripts/autosync.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "action": {
+    "default_title": "ISSS - Dashboard Incapacidades"
+  },
+  "side_panel": {
+    "default_path": "views/sidepanel.html"
+  },
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "64": "assets/icons/icon64.png",
+    "128": "assets/icons/icon128.png"
+  }
+}
