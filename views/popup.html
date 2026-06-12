@@ -162,14 +162,32 @@
   }
   
   /* Tablas de Resultados */
-  table {
+  #results {
+    display: block;
+    max-height: 240px;
+    overflow-y: auto;
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+  }
+  #results tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
   }
   .results-table td {
     padding: 8px 0;
     border-bottom: 1px solid #e2e8f0;
+  }
+  /* Estilo del scrollbar */
+  #results::-webkit-scrollbar {
+    width: 6px;
+  }
+  #results::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #results::-webkit-scrollbar-thumb {
+    background-color: rgba(30, 58, 138, 0.2);
+    border-radius: 10px;
   }
   .results-table tr:last-child td {
     border-bottom: none;

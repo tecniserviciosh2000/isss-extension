@@ -82,10 +82,9 @@ async function extractAllDataInPage() {
       }
     });
 
-    // Si obtenemos menos registros de los solicitados, es que ya llegamos al final
+    // Ya no dependemos de ROWS_PER_PAGE para saber si hay más, lo controlaremos en el loop principal
     return { 
       records, 
-      hasMore: records.length === ROWS_PER_PAGE,
       viewState: newViewState
     };
   }
@@ -124,21 +123,28 @@ async function extractAllDataInPage() {
     const xmlText = await response.text();
     const parsedData = parseTableHTML(xmlText);
     
-    if (parsedData.records.length > 0) {
-      allExtractedRecords = allExtractedRecords.concat(parsedData.records);
+    if (parsedData.records && parsedData.records.length > 0) {
+      const prevLength = allExtractedRecords.length;
+      
+      // Añadir evitando duplicados
+      for (const rec of parsedData.records) {
+          if (!allExtractedRecords.some(r => r.numeroIncapacidad === rec.numeroIncapacidad)) {
+              allExtractedRecords.push(rec);
+          }
+      }
+      
+      if (allExtractedRecords.length === prevLength) {
+          hasMore = false; // El servidor devolvió registros repetidos, terminamos
+      } else {
+          firstRecord += parsedData.records.length;
+      }
     } else {
-      hasMore = false;
-    }
-    
-    if (!parsedData.hasMore) {
-      hasMore = false;
+      hasMore = false; // El servidor devolvió una página vacía
     }
 
     if (parsedData.viewState) {
       currentViewState = parsedData.viewState;
     }
-    
-    firstRecord += ROWS_PER_PAGE;
     
     // Pausa para evitar rate limits
     await new Promise(r => setTimeout(r, 600));
@@ -290,6 +296,7 @@ async function loadAll() {
  */
 function processResults() {
   // Agrupar por estado
+  const summaryData = {};
   allRecords.forEach(record => {
     const estado = record.estado || "Desconocido";
     if (!summaryData[estado]) {
@@ -307,8 +314,8 @@ function processResults() {
     total += count;
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td class="label">${estado}</td>
-      <td class="count">${count}</td>
+      <td class="label" style="font-size: 13px;">${estado}</td>
+      <td class="count" style="font-size: 14px;">${count}</td>
     `;
     table.appendChild(tr);
   }
@@ -327,8 +334,8 @@ function processResults() {
   const summaryDiv = document.getElementById("summary");
   summaryDiv.innerHTML = `
     <div class="summary-box">
-      <table class="summary-table">
-        <tr><td>Total de Incapacidades:</td><td class="count">${total}</td></tr>
+      <table class="summary-table" style="width: 100%;">
+        <tr><td>Total de Incapacidades:</td><td class="count" style="font-size: 16px;">${total}</td></tr>
       </table>
     </div>
   `;

@@ -106,7 +106,6 @@ async function runAutoSync() {
 
         return { 
             records, 
-            hasMore: records.length === ROWS_PER_PAGE,
             viewState: newViewState
         };
     }
@@ -144,16 +143,25 @@ async function runAutoSync() {
             const xmlText = await response.text();
             const parsedData = parseTableHTML(xmlText);
             
-            if (parsedData.records.length > 0) {
-                allExtractedRecords = allExtractedRecords.concat(parsedData.records);
+            if (parsedData.records && parsedData.records.length > 0) {
+                const prevLength = allExtractedRecords.length;
+                
+                for (const rec of parsedData.records) {
+                    if (!allExtractedRecords.some(r => r.numeroIncapacidad === rec.numeroIncapacidad)) {
+                        allExtractedRecords.push(rec);
+                    }
+                }
+                
+                if (allExtractedRecords.length === prevLength) {
+                    hasMore = false;
+                } else {
+                    firstRecord += parsedData.records.length;
+                }
             } else {
                 hasMore = false;
             }
             
-            if (!parsedData.hasMore) hasMore = false;
             if (parsedData.viewState) currentViewState = parsedData.viewState;
-            
-            firstRecord += ROWS_PER_PAGE;
             
             // Pausa sutil para no saturar
             await new Promise(r => setTimeout(r, 600));
