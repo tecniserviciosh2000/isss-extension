@@ -14,7 +14,7 @@ function Write-Log($message) {
 
 Write-Log "--- Iniciando comprobación de actualización ---"
 
-$remoteUrl = 'https://raw.githubusercontent.com/tecniserviciosh2000/walmart-casos-extension/main/manifest.json'
+$remoteUrl = 'https://raw.githubusercontent.com/tecniserviciosh2000/isss-extension/main/manifest.json'
 $localManifestPath = "$installPath\manifest.json"
 
 try {
@@ -36,9 +36,9 @@ try {
         if ($localVersion -ne $remoteVersion) {
             Write-Log "Actualización detectada. Descargando nueva versión en formato ZIP..."
             
-            $zipUrl = "https://github.com/tecniserviciosh2000/walmart-casos-extension/archive/refs/heads/main.zip"
-            $zipFile = "$env:TEMP\walmart-extension-update.zip"
-            $extractTemp = "$env:TEMP\walmart-extension-temp"
+            $zipUrl = "https://github.com/tecniserviciosh2000/isss-extension/archive/refs/heads/main.zip"
+            $zipFile = "$env:TEMP\isss-extension-update.zip"
+            $extractTemp = "$env:TEMP\isss-extension-temp"
             
             # Limpiar temporales si existen
             if (Test-Path $zipFile) { Remove-Item $zipFile -Force }
@@ -49,7 +49,7 @@ try {
                 Expand-Archive -Path $zipFile -DestinationPath $extractTemp -Force
                 
                 # Copiar los archivos extraídos (Github añade una carpeta raíz con el nombre del repo y la rama)
-                $sourcePath = "$extractTemp\walmart-casos-extension-main\*"
+                $sourcePath = "$extractTemp\isss-extension-main\*"
                 Copy-Item -Path $sourcePath -Destination $installPath -Recurse -Force
                 
                 # Limpiar la basura

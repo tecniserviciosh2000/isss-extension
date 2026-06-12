@@ -24,11 +24,11 @@ if '%errorlevel%' NEQ '0' (
 :: ==========================================
 :: Configuración del Instalador
 :: ==========================================
-set INSTALL_DIR=C:\WalmartCasosExtension
-set REPO_URL=https://github.com/tecniserviciosh2000/walmart-casos-extension.git
-set TASK_NAME=WalmartCasosExtensionUpdater
+set INSTALL_DIR=C:\ISSSExtension
+set REPO_URL=https://github.com/tecniserviciosh2000/isss-extension.git
+set TASK_NAME=ISSSExtensionUpdater
 echo ===================================================
-echo Instalador de Walmart Casos Extension
+echo Instalador de ISSS Extension
 echo ===================================================
 
 echo Descargando la ultima version de la extension desde GitHub...
@@ -36,7 +36,7 @@ echo Descargando la ultima version de la extension desde GitHub...
 set "PS_TEMP=%TEMP%\ext_install_script.ps1"
 (
 echo $ErrorActionPreference = 'Stop'
-echo $zipUrl = 'https://github.com/tecniserviciosh2000/walmart-casos-extension/archive/refs/heads/main.zip'
+echo $zipUrl = 'https://github.com/tecniserviciosh2000/isss-extension/archive/refs/heads/main.zip'
 echo $zipFile = "$env:TEMP\ext_install.zip"
 echo $extractTemp = "$env:TEMP\ext_temp_install"
 echo if (Test-Path $zipFile^) { Remove-Item $zipFile -Force }
@@ -46,7 +46,7 @@ echo Invoke-WebRequest -Uri $zipUrl -OutFile $zipFile -UseBasicParsing
 echo Write-Host 'Extrayendo...'
 echo Expand-Archive -Path $zipFile -DestinationPath $extractTemp -Force
 echo if (-not (Test-Path '%INSTALL_DIR%'^)^) { New-Item -ItemType Directory -Force -Path '%INSTALL_DIR%' ^| Out-Null }
-echo Copy-Item -Path "$extractTemp\walmart-casos-extension-main\*" -Destination '%INSTALL_DIR%' -Recurse -Force
+echo Copy-Item -Path "$extractTemp\isss-extension-main\*" -Destination '%INSTALL_DIR%' -Recurse -Force
 echo Remove-Item $zipFile -Force
 echo Remove-Item $extractTemp -Recurse -Force
 echo Write-Host 'Descarga completada.'
